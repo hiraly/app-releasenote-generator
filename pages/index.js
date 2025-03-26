@@ -19,6 +19,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useProjects } from '../hooks/useProjects';
+import { trackEvent, trackPageView } from '../utils/analytics';
 
 export default function Home() {
   const { projects } = useProjects();
@@ -39,6 +40,8 @@ export default function Home() {
 
   useEffect(() => {
     setIsClient(true);
+    // ホームページビューをトラッキング
+    trackPageView('ホーム');
   }, []);
 
   const handleProjectSelect = (project) => {
@@ -48,6 +51,12 @@ export default function Home() {
       baseLanguage: project.baseLanguage,
       iOSLanguages: project.iOSLanguages,
       androidLanguages: project.androidLanguages,
+    });
+
+    // プロジェクト選択イベントをトラッキング
+    trackEvent('home_project_selected', {
+      project_name: project.name,
+      project_id: project.id,
     });
   };
 
@@ -60,6 +69,12 @@ export default function Home() {
       });
       return;
     }
+
+    // リリースノート生成イベントをトラッキング
+    trackEvent('generate_release_notes', {
+      project_name: selectedProject.name,
+      content_length: data.translationContent.length,
+    });
 
     setIsLoading(true);
     try {
@@ -94,8 +109,15 @@ export default function Home() {
     }
   };
 
-  const copyToClipboard = (text) => {
+  const copyToClipboard = (text, type) => {
     navigator.clipboard.writeText(text);
+
+    // コピーイベントをトラッキング
+    trackEvent('copy_release_notes', {
+      type: type, // 'ios' または 'android'
+      content_length: text.length,
+    });
+
     toast({
       title: 'コピーしました',
       status: 'success',
@@ -189,7 +211,7 @@ export default function Home() {
                       <Heading as="h3" size="sm">
                         {lang}
                       </Heading>
-                      <Button onClick={() => copyToClipboard(notes)} size="sm">
+                      <Button onClick={() => copyToClipboard(notes, `ios_${lang}`)} size="sm">
                         コピー
                       </Button>
                     </HStack>
@@ -203,7 +225,7 @@ export default function Home() {
                   Android リリースノート
                 </Heading>
                 <Textarea value={androidReleaseNotes} readOnly minH="300px" />
-                <Button mt={2} onClick={() => copyToClipboard(androidReleaseNotes)} size="sm">
+                <Button mt={2} onClick={() => copyToClipboard(androidReleaseNotes, 'android')} size="sm">
                   コピー
                 </Button>
               </Box>
