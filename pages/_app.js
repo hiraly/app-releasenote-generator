@@ -13,6 +13,10 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <title>App Release Note Generator</title>
         <meta name="description" content="アプリのリリースノートを複数言語で簡単に生成" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@hiradaty" />
+        <meta name="twitter:title" content="アプリのリリースノートを複数言語で簡単に生成" />
+        <meta name="twitter:image" content="/assets/ogp.png" />
         <meta property="og:title" content="App Release Note Generator" />
         <meta property="og:description" content="アプリのリリースノートを複数言語で簡単に生成" />
         <meta property="og:image" content="/assets/ogp.png" />
