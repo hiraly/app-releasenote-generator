@@ -1,5 +1,4 @@
 import OpenAI from 'openai';
-import { z } from 'zod';
 
 const openai = new OpenAI();
 
@@ -22,10 +21,6 @@ export default async function handler(req, res) {
 }
 
 async function generateIOSNotes(content, baseLanguage, languages) {
-  const languageList = languages.split(',').map((lang) => lang.trim());
-
-  const zLangList = z.object(languageList.map((lang) => ({ [lang]: z.string() })));
-
   const prompt = `以下のコンテンツ、ベース言語、および言語リストに基づいて、iOSのリリースノートを生成してください。
 
   コンテンツ:
@@ -52,9 +47,18 @@ async function generateIOSNotes(content, baseLanguage, languages) {
   });
 
   const iOSNotes = completion.choices[0].message.content;
-  const notesStr = iOSNotes.match(/(?<=```json\s*)\{([\s\S]*)\}/g);
-  console.log('iOSNotes', iOSNotes);
-  const extractedNotes = JSON.parse(notesStr);
+
+  // Extract JSON content from markdown code blocks
+  let extractedNotes = {};
+  try {
+    // Remove the markdown code block delimiters and extract the JSON content
+    const jsonContent = iOSNotes.replace(/```json\s*([\s\S]*?)\s*```/g, '$1');
+    extractedNotes = JSON.parse(jsonContent);
+  } catch (error) {
+    console.error('Error parsing iOS notes:', error);
+    extractedNotes = {};
+  }
+
   return extractedNotes;
 }
 
