@@ -170,15 +170,15 @@ export default function Projects() {
               <VStack spacing={4} align="stretch">
                 <FormControl isRequired>
                   <FormLabel>プロジェクト名</FormLabel>
-                  <Input name="name" value={formData.name} onChange={handleInputChange} placeholder="プロジェクト名" />
+                  <Input name="name" value={formData.name} onChange={handleInputChange} placeholder="プロジェクト名" bg="#FFF" />
                 </FormControl>
                 <FormControl isRequired>
                   <FormLabel>ベース言語 (例: ja)</FormLabel>
-                  <Input name="baseLanguage" value={formData.baseLanguage} onChange={handleInputChange} placeholder="ja" />
+                  <Input name="baseLanguage" value={formData.baseLanguage} onChange={handleInputChange} placeholder="ja" bg="#FFF" />
                 </FormControl>
                 <FormControl isRequired>
                   <FormLabel>iOS 言語リスト</FormLabel>
-                  <Textarea name="iOSLanguages" value={formData.iOSLanguages} onChange={handleInputChange} placeholder="例： ja,en,fr,de" />
+                  <Textarea name="iOSLanguages" value={formData.iOSLanguages} onChange={handleInputChange} placeholder="例： ja,en,fr,de" bg="#FFF" />
                 </FormControl>
                 <FormControl isRequired>
                   <FormLabel>Android 言語リスト</FormLabel>
@@ -187,6 +187,7 @@ export default function Projects() {
                     value={formData.androidLanguages}
                     onChange={handleInputChange}
                     placeholder="例： &lt;en-US&gt;&lt;/en-US&gt;,&lt;ja-JP&gt;&lt;/ja-JP&gt;"
+                    bg="#FFF"
                   />
                 </FormControl>
                 <Button type="submit" colorScheme="blue" onClick={() => trackEvent('form_submit_clicked')}>
